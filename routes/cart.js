@@ -1,59 +1,51 @@
 const express = require('express');
 const router = express.Router();
 
+// Import middleware
+const { authenticate } = require('../middleware/authMiddleware');
+const {
+  validateAddToCart,
+  validateUpdateCartItem
+} = require('../middleware/validation');
+
+// Import controllers
+const {
+  addToCart,
+  getCart,
+  updateCartItem,
+  removeFromCart,
+  clearCart
+} = require('../controllers/cartController');
+
 /**
  * Cart Routes
  * Base path: /api/cart
+ * All routes require authentication
  */
 
 // @route   GET /api/cart
-// @desc    Get user's cart
-// @access  Private
-router.get('/', (req, res) => {
-  res.status(501).json({
-    success: false,
-    message: 'Get cart endpoint - Coming in Step 6'
-  });
-});
+// @desc    Get user's cart with total calculation
+// @access  Protected
+router.get('/', authenticate, getCart);
 
-// @route   POST /api/cart/add
+// @route   POST /api/cart
 // @desc    Add item to cart
-// @access  Private
-router.post('/add', (req, res) => {
-  res.status(501).json({
-    success: false,
-    message: 'Add to cart endpoint - Coming in Step 6'
-  });
-});
+// @access  Protected
+router.post('/', authenticate, validateAddToCart, addToCart);
 
-// @route   PUT /api/cart/update
+// @route   PUT /api/cart/:id
 // @desc    Update cart item quantity
-// @access  Private
-router.put('/update', (req, res) => {
-  res.status(501).json({
-    success: false,
-    message: 'Update cart endpoint - Coming in Step 6'
-  });
-});
+// @access  Protected
+router.put('/:id', authenticate, validateUpdateCartItem, updateCartItem);
 
-// @route   DELETE /api/cart/remove/:productId
-// @desc    Remove item from cart
-// @access  Private
-router.delete('/remove/:productId', (req, res) => {
-  res.status(501).json({
-    success: false,
-    message: 'Remove from cart endpoint - Coming in Step 6'
-  });
-});
+// @route   DELETE /api/cart/:id
+// @desc    Remove specific item from cart
+// @access  Protected
+router.delete('/:id', authenticate, removeFromCart);
 
-// @route   DELETE /api/cart/clear
+// @route   DELETE /api/cart
 // @desc    Clear entire cart
-// @access  Private
-router.delete('/clear', (req, res) => {
-  res.status(501).json({
-    success: false,
-    message: 'Clear cart endpoint - Coming in Step 6'
-  });
-});
+// @access  Protected
+router.delete('/', authenticate, clearCart);
 
 module.exports = router;
