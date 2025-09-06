@@ -325,4 +325,4 @@ This project is licensed under the ISC License - see the package.json file for d
 
 ---
 
-**EcoFinds Team** - Building sustainable commerce solutions 🌱
+**Team Ctrl-Alt-Defeat**
