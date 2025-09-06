@@ -108,13 +108,18 @@ A Node.js/Express backend API for EcoFinds, a sustainable second-hand marketplac
 - `GET /api/products/suggestions` - Get search suggestions (Public)
 - `GET /api/products/stats` - Get category statistics (Public)
 
-### Cart & Purchases (Coming in Step 6)
-- `GET /api/cart` - Get user cart
-- `POST /api/cart/add` - Add item to cart
-- `PUT /api/cart/update` - Update cart item
-- `DELETE /api/cart/remove/:productId` - Remove from cart
-- `POST /api/purchases` - Create purchase
-- `GET /api/purchases` - Get purchase history
+### Cart ✅
+- `GET /api/cart` - Get user's cart with total calculation (Protected)
+- `POST /api/cart` - Add item to cart (Protected)
+- `PUT /api/cart/:id` - Update cart item quantity (Protected)
+- `DELETE /api/cart/:id` - Remove specific item from cart (Protected)
+- `DELETE /api/cart` - Clear entire cart (Protected)
+
+### Purchases ✅
+- `POST /api/purchases` - Create purchase from cart (Protected)
+- `GET /api/purchases` - Get user's purchase history with pagination (Protected)
+- `GET /api/purchases/:id` - Get single purchase details (Protected)
+- `GET /api/purchases/stats` - Get purchase statistics for dashboard (Protected)
 
 ## 🔒 Environment Variables
 
@@ -289,6 +294,82 @@ curl -X GET "http://localhost:5000/api/products/suggestions?q=lap&limit=5"
 curl -X GET http://localhost:5000/api/products/stats
 ```
 
+### Cart Examples
+
+**Get user's cart (requires token):**
+```bash
+curl -X GET http://localhost:5000/api/cart \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+
+**Add item to cart (requires token):**
+```bash
+curl -X POST http://localhost:5000/api/cart \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "productId": "PRODUCT_ID_HERE",
+    "quantity": 2
+  }'
+```
+
+**Update cart item quantity (requires token):**
+```bash
+curl -X PUT http://localhost:5000/api/cart/CART_ITEM_ID_HERE \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "quantity": 3
+  }'
+```
+
+**Remove item from cart (requires token):**
+```bash
+curl -X DELETE http://localhost:5000/api/cart/CART_ITEM_ID_HERE \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+
+**Clear entire cart (requires token):**
+```bash
+curl -X DELETE http://localhost:5000/api/cart \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+
+### Purchase Examples
+
+**Create purchase from cart (requires token):**
+```bash
+curl -X POST http://localhost:5000/api/purchases \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "notes": "Please handle with care"
+  }'
+```
+
+**Get purchase history with pagination (requires token):**
+```bash
+# Basic purchase history
+curl -X GET http://localhost:5000/api/purchases \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+
+# With pagination
+curl -X GET "http://localhost:5000/api/purchases?page=1&limit=5" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+
+**Get single purchase details (requires token):**
+```bash
+curl -X GET http://localhost:5000/api/purchases/PURCHASE_ID_HERE \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+
+**Get purchase statistics for dashboard (requires token):**
+```bash
+curl -X GET http://localhost:5000/api/purchases/stats \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+
 ## 🧪 Development
 
 ```bash
@@ -309,7 +390,7 @@ npm start
 - ✅ **Step 3**: User profile management (get/update profile, dashboard stats)
 - ✅ **Step 4**: Product CRUD with ownership checks, categories, validation
 - ✅ **Step 5**: Enhanced browsing, advanced search, filtering, suggestions
-- ⏳ **Step 6**: Shopping cart and purchase system
+- ✅ **Step 6**: Shopping cart and purchase system
 
 ## 🤝 Contributing
 
