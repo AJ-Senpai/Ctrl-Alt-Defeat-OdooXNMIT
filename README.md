@@ -1,4 +1,4 @@
-# EcoFinds - Sustainable Second-Hand Marketplace Backend
+# EcoFinds - Sustainable Second-Hand Marketplace
 
 A Node.js/Express backend API for EcoFinds, a sustainable second-hand marketplace platform.
 
